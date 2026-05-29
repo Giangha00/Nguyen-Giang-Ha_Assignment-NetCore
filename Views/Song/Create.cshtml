@@ -1,0 +1,96 @@
+@model MusicManagement.Models.Song
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Song</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lyrics" class="control-label"></label>
+                <textarea asp-for="Lyrics" class="form-control" id="editor"></textarea>
+                <span asp-validation-for="Lyrics" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Hình ảnh sản phẩm</label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mp3Link" class="control-label"></label>
+                <input asp-for="Mp3Link" class="form-control" />
+                <span asp-validation-for="Mp3Link" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SingerId" class="control-label"></label>
+                <select asp-for="SingerId" class ="form-control" asp-items="ViewBag.SingerId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ComposerId" class="control-label"></label>
+                <select asp-for="ComposerId" class ="form-control" asp-items="ViewBag.ComposerId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+    
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                // Cấu hình các công cụ hiển thị trên thanh toolbar (tùy chọn)
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+            })
+            .then(editor => {
+                console.log('Editor was initialized', editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    
+    <!-- Đừng quên nhúng script validation mặc định của .NET -->
+    <partial name="_ValidationScriptsPartial" />
+}
+
