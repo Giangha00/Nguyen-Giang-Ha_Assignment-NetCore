@@ -128,36 +128,40 @@
         [HttpPost]
         public async Task<IActionResult> Create(Song song)
         {
-            _logger.LogInformation("Song Created");
             if (!ModelState.IsValid) {
-                if (song.ImageFile != null) {
-                    _logger.LogInformation("Image Okie");
-                    var result = await _photoService.AddPhotoAsync(song.ImageFile);
-                    if (result.Error != null) {
-                        ModelState.AddModelError("ImageFile", "Tải ảnh thất bại.");
-                        return View(song);
-                    }
-                    _logger.LogInformation("Image Okie1");
-                    song.ThumbnailUrl = result.SecureUrl.AbsoluteUri; // Lấy URL từ Cloudinary
-                }
+                ViewBag.Singers =
+                    new SelectList(await _context.Singers.ToListAsync(),
+                        "Id", "Name");
 
-                if (song.Mp3File != null)
-                {
-                    _logger.LogInformation("Mp3 Okie");
-                    var result = await _photoService.AddMusicAsync(song.Mp3File);
-                    if (result.Error != null) {
-                        ModelState.AddModelError("Mp3File", "Tải nhạc thất bại.");
-                        return View(song);
-                    }
-                    _logger.LogInformation("Mp3 Okie1");
-                    song.Mp3Link = result.SecureUrl.AbsoluteUri;
-                }
+                ViewBag.Composers =
+                    new SelectList(await _context.Composers.ToListAsync(),
+                        "Id", "Name");
 
-                _context.Add(song);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Save Okie");
-                return RedirectToAction(nameof(Index));
+                return View(song);
             }
+            if (song.ImageFile != null) {
+                var result = await _photoService.AddPhotoAsync(song.ImageFile);
+                if (result.Error != null) {
+                    ModelState.AddModelError("ImageFile", "Tải ảnh thất bại.");
+                    return View(song);
+                }
+                song.ThumbnailUrl = result.SecureUrl.AbsoluteUri; // Lấy URL từ Cloudinary
+            }
+
+            if (song.Mp3File != null)
+            {
+                var result = await _photoService.AddMusicAsync(song.Mp3File);
+                if (result.Error != null) {
+                    ModelState.AddModelError("Mp3File", "Tải nhạc thất bại.");
+                    return View(song);
+                }
+                song.Mp3Link = result.SecureUrl.AbsoluteUri;
+            }
+            song.CreatedAt = DateTime.Now;
+            song.UpdatedAt = DateTime.Now;
+            _context.Add(song);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             return View(song);
         }
         
