@@ -10,10 +10,10 @@ public class Song
     [Required(ErrorMessage = "Tiêu đề không được để trống")]
     public string Title { get; set; } = string.Empty;
     public string Lyrics  { get; set; } = string.Empty;
-    public string ThumbnailUrl  { get; set; }
+    public string? ThumbnailUrl  { get; set; }
     [NotMapped] // Không tạo cột này trong Database
     public IFormFile? ImageFile { get; set; } 
-    public string Mp3Link  { get; set; } = string.Empty;
+    public string? Mp3Link  { get; set; } = string.Empty;
     [NotMapped] // Không tạo cột này trong Database
     public IFormFile? Mp3File { get; set; } 
     public DateTime ReleaseDate  { get; set; }
