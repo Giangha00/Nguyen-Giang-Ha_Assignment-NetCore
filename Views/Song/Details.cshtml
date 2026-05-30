@@ -1,0 +1,106 @@
+@model MusicManagement.Models.Song
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg p-4">
+
+        <div class="row">
+
+            <!-- Thumbnail -->
+            <div class="col-md-4 text-center">
+
+                <img src="@Model.ThumbnailUrl"
+                     class="img-fluid rounded"
+                     style="max-height:350px;object-fit:cover;" />
+
+            </div>
+
+            <!-- Song Info -->
+            <div class="col-md-8">
+
+                <h1 class="mb-3">@Model.Title</h1>
+
+                <p>
+                    <strong>Ca sĩ:</strong>
+                    @Model.Singer?.Name
+                </p>
+
+                <p>
+                    <strong>Nhạc sĩ:</strong>
+                    @Model.Composer?.Name
+                </p>
+
+                <p>
+                    <strong>Ngày phát hành:</strong>
+                    @Model.ReleaseDate.ToString("dd/MM/yyyy")
+                </p>
+
+                <p>
+                    <strong>Trạng thái:</strong>
+                    @(Model.Status == 1 ? "Hoạt động" : "Ẩn")
+                </p>
+
+                <!-- Audio -->
+                <div class="mt-4">
+
+                    <audio controls style="width:100%">
+                        <source src="@Model.Mp3Link" type="audio/mpeg">
+                    </audio>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Lyrics -->
+        <div class="mt-5">
+
+            <h3>Lời bài hát</h3>
+
+            <div class="border rounded p-3 bg-light">
+                @Html.Raw(Model.Lyrics)
+            </div>
+
+        </div>
+
+        <!-- Dates -->
+        <div class="mt-4 text-muted">
+
+            <small>
+                Created:
+                @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+            </small>
+
+            <br/>
+
+            <small>
+                Updated:
+                @Model.UpdatedAt.ToString("dd/MM/yyyy HH:mm")
+            </small>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                Edit
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

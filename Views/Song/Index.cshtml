@@ -1,90 +1,556 @@
-@model IEnumerable<MusicManagement.Models.Song>
+@model MusicManagement.Models.SongViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Song Management";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lyrics)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThumbnailUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mp3Link)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReleaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Singer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Composer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lyrics)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThumbnailUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mp3Link)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Singer.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Composer.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+            Song Management
+        </h2>
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Create New
+        </a>
+
+    </div>
+
+    <!-- FILTER -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+                Search & Filter
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Index" method="get">
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <input type="text"
+                               name="Keyword"
+                               value="@Model.Keyword"
+                               class="form-control"
+                               placeholder="Search title..." />
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <select name="SingerId"
+                                class="form-select">
+
+                            <option value="">
+                                All Singers
+                            </option>
+
+                            @foreach (var singer in Model.Singers)
+                            {
+                                <option value="@singer.Id"
+                                        selected="@(Model.SingerId == singer.Id)">
+                                    @singer.Name
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <select name="ComposerId"
+                                class="form-select">
+
+                            <option value="">
+                                All Composers
+                            </option>
+
+                            @foreach (var composer in Model.Composers)
+                            {
+                                <option value="@composer.Id"
+                                        selected="@(Model.ComposerId == composer.Id)">
+                                    @composer.Name
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <input type="hidden"
+                               asp-for="DateRange"
+                               id="DateRange" />
+
+                        <div id="reportrange"
+                             class="form-control">
+
+                            <span></span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <select name="SortOrder"
+                                class="form-select">
+
+                            <option value="id_asc">
+                                ID Asc
+                            </option>
+
+                            <option value="id_desc">
+                                ID Desc
+                            </option>
+
+                            <option value="name_asc">
+                                Name A-Z
+                            </option>
+
+                            <option value="name_desc">
+                                Name Z-A
+                            </option>
+
+                            <option value="date_desc">
+                                Newest
+                            </option>
+
+                            <option value="date_asc">
+                                Oldest
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+
+                        <button type="submit"
+                                class="btn btn-success">
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-3 d-flex gap-2">
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+
+                        Reset
+
+                    </a>
+
+                    <button type="button"
+                            id="btnDeleteSelected"
+                            class="btn btn-danger"
+                            disabled>
+
+                        Delete Selected
+                        (<span id="selectedCount">0</span>)
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- TOTAL -->
+
+    <div class="alert alert-info shadow-sm">
+
+        Total songs in page:
+        <strong>@Model.Songs.Count</strong>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body p-0">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-dark text-center">
+
+                <tr>
+
+                    <th style="width:50px;">
+                        <input type="checkbox"
+                               id="checkAll"
+                               class="form-check-input" />
+                    </th>
+
+                    <th>ID</th>
+
+                    <th>Thumbnail</th>
+
+                    <th>Title</th>
+
+                    <th>Singer</th>
+
+                    <th>Composer</th>
+
+                    <th>Audio</th>
+
+                    <th>Release Date</th>
+
+                    <th>Status</th>
+
+                    <th width="220">
+                        Actions
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                @foreach (var item in Model.Songs)
+                {
+                    <tr>
+
+                        <td class="text-center">
+
+                            <input type="checkbox"
+                                   class="user-checkbox form-check-input"
+                                   value="@item.Id" />
+
+                        </td>
+
+                        <td>
+                            @item.Id
+                        </td>
+
+                        <td>
+
+                            <img src="@item.ThumbnailUrl"
+                                 class="rounded shadow-sm"
+                                 style="width:80px;
+                                        height:80px;
+                                        object-fit:cover;" />
+
+                        </td>
+
+                        <td class="fw-semibold">
+                            @item.Title
+                        </td>
+
+                        <td>
+                            @item.Singer?.Name
+                        </td>
+
+                        <td>
+                            @item.Composer?.Name
+                        </td>
+
+                        <td>
+
+                            <audio controls
+                                   style="width:180px;">
+
+                                <source src="@item.Mp3Link"
+                                        type="audio/mpeg">
+
+                            </audio>
+
+                        </td>
+
+                        <td>
+                            @item.ReleaseDate.ToString("dd/MM/yyyy")
+                        </td>
+
+                        <td>
+
+                            @if (item.Status == 1)
+                            {
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    Hidden
+                                </span>
+                            }
+
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-1">
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-warning btn-sm">
+
+                                    Edit
+
+                                </a>
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info btn-sm text-white">
+
+                                    Details
+
+                                </a>
+
+                                <form asp-action="DeleteConfirmed"
+                                      asp-route-id="@item.Id"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Bạn có chắc muốn xoá bài hát này không?')">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            @if (Model.Songs.HasPreviousPage)
+            {
+                <li class="page-item">
+
+                    <a class="page-link"
+                       asp-route-pageIndex="@(Model.Songs.PageIndex - 1)">
+
+                        Previous
+
+                    </a>
+
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.Songs.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Songs.PageIndex ? "active" : "")">
+
+                    <a class="page-link"
+                       asp-route-pageIndex="@i"
+                       asp-route-Keyword="@Model.Keyword"
+                       asp-route-SingerId="@Model.SingerId"
+                       asp-route-ComposerId="@Model.ComposerId"
+                       asp-route-DateRange="@Model.DateRange"
+                       asp-route-SortOrder="@Model.SortOrder">
+
+                        @i
+
+                    </a>
+
+                </li>
+            }
+
+            @if (Model.Songs.HasNextPage)
+            {
+                <li class="page-item">
+
+                    <a class="page-link"
+                       asp-route-pageIndex="@(Model.Songs.PageIndex + 1)">
+
+                        Next
+
+                    </a>
+
+                </li>
+            }
+
+        </ul>
+
+    </nav>
+
+</div>
+
+@section Scripts {
+    
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script>
+
+$(function () {
+
+    var start = moment().subtract(29, 'days');
+
+    var end = moment();
+
+    // Nếu đã filter trước đó
+    if ($("#DateRange").val() !== "") {
+
+        let dates = $("#DateRange").val().split(" - ");
+
+        start = moment(dates[0], "MM/DD/YYYY");
+
+        end = moment(dates[1], "MM/DD/YYYY");
+    }
+
+    function cb(start, end) {
+
+        let value =
+            start.format('MM/DD/YYYY') +
+            ' - ' +
+            end.format('MM/DD/YYYY');
+
+        // Hiển thị text
+        $('#reportrange span').html(value);
+
+        // Gán vào hidden input
+        $('#DateRange').val(value);
+    }
+
+    $('#reportrange').daterangepicker({
+
+        startDate: start,
+
+        endDate: end,
+
+        ranges: {
+
+           'Today': [moment(), moment()],
+
+           'Yesterday': [
+               moment().subtract(1, 'days'),
+               moment().subtract(1, 'days')
+           ],
+
+           'Last 7 Days': [
+               moment().subtract(6, 'days'),
+               moment()
+           ],
+
+           'Last 30 Days': [
+               moment().subtract(29, 'days'),
+               moment()
+           ],
+
+           'This Month': [
+               moment().startOf('month'),
+               moment().endOf('month')
+           ],
+
+           'Last Month': [
+               moment().subtract(1, 'month').startOf('month'),
+               moment().subtract(1, 'month').endOf('month')
+           ]
+        }
+
+    }, cb);
+
+    cb(start, end);
+
+});
+
+$(function () {
+    // 1. Xử lý Check All
+    $('#checkAll').click(function () {
+        $('.user-checkbox').prop('checked', this.checked);
+        updateDeleteButton();
+    });
+
+    // 2. Xử lý khi nhấn từng checkbox lẻ
+    $('.user-checkbox').click(function () {
+        if (!this.checked) {
+            $('#checkAll').prop('checked', false);
+        }
+        if ($('.user-checkbox:checked').length === $('.user-checkbox').length) {
+            $('#checkAll').prop('checked', true);
+        }
+        updateDeleteButton();
+    });
+
+    // 3. Cập nhật trạng thái nút Xóa
+    function updateDeleteButton() {
+        var selectedIds = $('.user-checkbox:checked').length;
+        $('#selectedCount').text(selectedIds);
+        if (selectedIds > 0) {
+            $('#btnDeleteSelected').prop('disabled', false);
+        } else {
+            $('#btnDeleteSelected').prop('disabled', true);
+        }
+    }
+
+    // 4. Xử lý sự kiện nút Xóa (Sử dụng AJAX)
+    $('#btnDeleteSelected').click(function () {
+        var selectedIds = [];
+        $('.user-checkbox:checked').each(function () {
+            selectedIds.push($(this).val());
+        });
+
+        if (confirm("Bạn có chắc chắn muốn xóa " + selectedIds.length + " tài khoản đã chọn?")) {
+            $.ajax({
+                url: '@Url.Action("DeleteSelected", "Song")',
+                type: 'POST',
+                data: { ids: selectedIds },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // Tải lại trang để cập nhật danh sách
+                    } else {
+                        alert("Có lỗi xảy ra: " + response.message);
+                    }
+                },
+                error: function () {
+                    alert("Không thể kết nối đến máy chủ.");
+                }
+            });
+        }
+    });
+});
+
+</script>
 }
-    </tbody>
-</table>

@@ -1,96 +1,304 @@
 @model MusicManagement.Models.Song
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Song";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
 
-<h4>Song</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lyrics" class="control-label"></label>
-                <textarea asp-for="Lyrics" class="form-control" id="editor"></textarea>
-                <span asp-validation-for="Lyrics" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label>Hình ảnh sản phẩm</label>
-                <input asp-for="ImageFile" type="file" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mp3Link" class="control-label"></label>
-                <input asp-for="Mp3Link" class="form-control" />
-                <span asp-validation-for="Mp3Link" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedAt" class="control-label"></label>
-                <input asp-for="UpdatedAt" class="form-control" />
-                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SingerId" class="control-label"></label>
-                <select asp-for="SingerId" class ="form-control" asp-items="ViewBag.SingerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ComposerId" class="control-label"></label>
-                <select asp-for="ComposerId" class ="form-control" asp-items="ViewBag.ComposerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                🎵 Create New Song
+            </h3>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create" enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+                <div class="row">
+
+                    <!-- LEFT -->
+                    <div class="col-lg-8">
+
+                        <div class="mb-3">
+                            <label asp-for="Title"
+                                   class="form-label fw-bold">
+                                Song Title
+                            </label>
+
+                            <input asp-for="Title"
+                                   class="form-control"
+                                   placeholder="Enter song title..." />
+
+                            <span asp-validation-for="Title"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Lyrics"
+                                   class="form-label fw-bold">
+                                Lyrics
+                            </label>
+
+                            <textarea asp-for="Lyrics"
+                                      id="editor"
+                                      class="form-control">
+                            </textarea>
+
+                            <span asp-validation-for="Lyrics"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="SingerId"
+                                       class="form-label fw-bold">
+                                    Singer
+                                </label>
+
+                                <select asp-for="SingerId"
+                                        asp-items="ViewBag.Singers"
+                                        class="form-select">
+
+                                    <option value="">
+                                        -- Select Singer --
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="ComposerId"
+                                       class="form-label fw-bold">
+                                    Composer
+                                </label>
+
+                                <select asp-for="ComposerId"
+                                        asp-items="ViewBag.Composers"
+                                        class="form-select">
+
+                                    <option value="">
+                                        -- Select Composer --
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="ReleaseDate"
+                                       class="form-label fw-bold">
+                                    Release Date
+                                </label>
+
+                                <input asp-for="ReleaseDate"
+                                       type="date"
+                                       class="form-control" />
+
+                                <span asp-validation-for="ReleaseDate"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="Status"
+                                       class="form-label fw-bold">
+                                    Status
+                                </label>
+
+                                <select asp-for="Status"
+                                        class="form-select">
+
+                                    <option value="1">
+                                        Active
+                                    </option>
+
+                                    <option value="0">
+                                        Hidden
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-lg-4">
+
+                        <!-- Thumbnail -->
+                        <div class="card mb-3 shadow-sm">
+
+                            <div class="card-header">
+                                🖼 Thumbnail
+                            </div>
+
+                            <div class="card-body">
+
+                                <img id="imagePreview"
+                                     src="https://placehold.co/400x250?text=Thumbnail"
+                                     class="img-fluid rounded mb-3 border" />
+
+                                <input asp-for="ImageFile"
+                                       type="file"
+                                       class="form-control"
+                                       accept="image/*"
+                                       onchange="previewImage(this)" />
+
+                                <span asp-validation-for="ImageFile"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- MP3 -->
+                        <div class="card shadow-sm">
+
+                            <div class="card-header">
+                                🎧 Audio Preview
+                            </div>
+
+                            <div class="card-body">
+
+                                <audio id="audioPreview"
+                                       controls
+                                       style="width:100%;display:none;">
+                                </audio>
+
+                                <input asp-for="Mp3File"
+                                       type="file"
+                                       class="form-control mt-3"
+                                       accept=".mp3,audio/*"
+                                       onchange="previewAudio(this)" />
+
+                                <span asp-validation-for="Mp3File"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-between">
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+
+                        ← Back to List
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        💾 Create Song
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts
 {
     <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
-    
+
     <script>
         ClassicEditor
             .create(document.querySelector('#editor'), {
-                // Cấu hình các công cụ hiển thị trên thanh toolbar (tùy chọn)
-                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
-            })
-            .then(editor => {
-                console.log('Editor was initialized', editor);
+                toolbar: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    'link',
+                    'bulletedList',
+                    'numberedList',
+                    'blockQuote',
+                    'insertTable',
+                    '|',
+                    'undo',
+                    'redo'
+                ]
             })
             .catch(error => {
                 console.error(error);
             });
     </script>
-    
-    <!-- Đừng quên nhúng script validation mặc định của .NET -->
+
+    <script>
+
+        function previewImage(input) {
+
+            if (input.files && input.files[0]) {
+
+                let reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    $("#imagePreview")
+                        .attr("src", e.target.result);
+
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewAudio(input) {
+
+            if (input.files && input.files[0]) {
+
+                let audio = document.getElementById("audioPreview");
+
+                audio.src = URL.createObjectURL(input.files[0]);
+
+                audio.style.display = "block";
+
+                audio.load();
+            }
+        }
+
+    </script>
+
     <partial name="_ValidationScriptsPartial" />
 }
-

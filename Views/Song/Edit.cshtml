@@ -1,0 +1,245 @@
+@model MusicManagement.Models.Song
+
+@{
+    ViewData["Title"] = "Edit Song";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-music-note-beamed"></i>
+            Edit Song
+        </h2>
+
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Song Information</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Edit" enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+
+                    <!-- LEFT -->
+                    <div class="col-md-8">
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-semibold"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Lyrics" class="form-label fw-semibold"></label>
+                            <textarea asp-for="Lyrics"
+                                      class="form-control"
+                                      id="editor"
+                                      rows="10">
+                            </textarea>
+                            <span asp-validation-for="Lyrics" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SingerId"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <select asp-for="SingerId"
+                                        class="form-select"
+                                        asp-items="ViewBag.Singers">
+                                </select>
+
+                                <span asp-validation-for="SingerId"
+                                      class="text-danger">
+                                </span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ComposerId"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <select asp-for="ComposerId"
+                                        class="form-select"
+                                        asp-items="ViewBag.Composers">
+                                </select>
+
+                                <span asp-validation-for="ComposerId"
+                                      class="text-danger">
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="ReleaseDate"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <input asp-for="ReleaseDate"
+                                       type="date"
+                                       class="form-control" />
+
+                                <span asp-validation-for="ReleaseDate"
+                                      class="text-danger">
+                                </span>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="CreatedAt"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <input asp-for="CreatedAt"
+                                       class="form-control"
+                                       readonly />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="UpdatedAt"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <input asp-for="UpdatedAt"
+                                       class="form-control"
+                                       readonly />
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Status"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <select asp-for="Status"
+                                    class="form-select">
+
+                                <option value="1">Active</option>
+                                <option value="0">Hidden</option>
+
+                            </select>
+
+                            <span asp-validation-for="Status"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-md-4">
+
+                        <div class="card mb-3">
+
+                            <div class="card-header">
+                                Thumbnail
+                            </div>
+
+                            <div class="card-body text-center">
+
+                                <img src="@Model.ThumbnailUrl"
+                                     class="img-fluid rounded shadow-sm mb-3"
+                                     style="max-height:250px;object-fit:cover;" />
+
+                                <input asp-for="ImageFile"
+                                       type="file"
+                                       class="form-control" />
+
+                                <span asp-validation-for="ImageFile"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                MP3 Preview
+                            </div>
+
+                            <div class="card-body">
+
+                                <audio controls style="width:100%;" class="mb-3">
+                                    <source src="@Model.Mp3Link"
+                                            type="audio/mpeg">
+                                </audio>
+
+                                <input asp-for="Mp3File"
+                                       type="file"
+                                       class="form-control" />
+
+                                <span asp-validation-for="Mp3File"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2 justify-content-end">
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        <i class="bi bi-check-circle"></i>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

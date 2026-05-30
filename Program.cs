@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MusicManagement.Data;
 using MusicManagement.Helpers;
+using MusicManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

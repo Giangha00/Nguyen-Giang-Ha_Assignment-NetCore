@@ -3,6 +3,8 @@ using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
 using MusicManagement.Helpers;
 
+namespace MusicManagement.Services;
+
 public class PhotoService : IPhotoService {
     private readonly Cloudinary _cloudinary;
 
@@ -21,6 +23,27 @@ public class PhotoService : IPhotoService {
             };
             uploadResult = await _cloudinary.UploadAsync(uploadParams);
         }
+        return uploadResult;
+    }
+    
+    public async Task<RawUploadResult> AddMusicAsync(IFormFile file)
+    {
+        var uploadResult = new RawUploadResult();
+
+        if (file.Length > 0)
+        {
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new RawUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                PublicId = Guid.NewGuid().ToString()
+            };
+
+            uploadResult =
+                await _cloudinary.UploadAsync(uploadParams);
+        }
+
         return uploadResult;
     }
 }
